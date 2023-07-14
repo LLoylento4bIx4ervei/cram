@@ -1,0 +1,33 @@
+from django.shortcuts import render,redirect
+from item.models import Category,Item
+from .forms import SighUpForm
+
+def browser(request):
+    items = Item.objects.filter(is_sold = False)[0:6]
+    categories = Category.objects.all()
+
+    return render(request,'core/index.html',
+                  { 'categories':categories,
+                    'items':items
+                   })
+
+
+def cont(request):
+    return render(request,'core/cont.html')
+
+
+def signup(request):
+
+    if request.method == 'POST':
+        form = SighUpForm(request.POST)
+
+        if form.is_valid():
+            form.save()
+
+            return redirect ('/login/')
+    else:
+        form = SighUpForm()
+
+    return render(request,'core/signup.html',{
+         'form':form,
+    })
